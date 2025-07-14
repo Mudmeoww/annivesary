@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anniversary 1 Year</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Sriracha', cursive;
+            background: linear-gradient(135deg, #ffe4ec, #fff9e6, #fdf5e6);
+            color: #5c3c3c;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #ff8fa3;
+        }
+
+        p {
+            font-size: 1.5rem;
+            color: #a97454;
+            max-width: 700px;
+            margin: 1rem auto;
+        }
+
+        .card {
+            background: #fffaf3;
+            border-radius: 30px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .heart {
+            font-size: 2rem;
+            color: #f39ab7;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-family: inherit;
+            border-radius: 15px;
+            border: 1px solid #ffd6e7;
+            resize: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #ffd1dc;
+            border-radius: 20px;
+            color: #5c3c3c;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        audio {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>💗 ครบรอบ 1 ปี 💗</h1>
+        <p>ขอบคุณที่อยู่ข้างกันมาตลอด 365 วัน<br>หวังว่าเราจะได้เดินเคียงข้างกันไปอีกนานแสนนานเลยนะ :)</p>
+        <div class="heart">❤️❤️❤️</div>
+
+        <!-- เพลงเปิดอัตโนมัติ -->
+        <audio id="bgm" autoplay muted loop>
+            <source src="ฝากใจ.mp3" type="audio/mpeg">
+            ไม่สามารถเล่นเพลงได้
+        </audio>
+
+        <!-- แถบควบคุมเพลงเสริม -->
+        <p style="font-size: 0.9rem; margin-top: 1rem;">🎵 หากไม่ได้ยินเพลง กดเล่นตรงนี้ได้น้า</p>
+        <audio controls>
+            <source src="ฝากใจ.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <div class="card">
+        <h2>เขียนถึงกันหน่อย 💌</h2>
+        <textarea id="loveNote" placeholder="พิมพ์ข้อความถึงเราได้ตรงนี้เลยนะ" rows="4"></textarea>
+        <br>
+        <button onclick="sendMessage()">ส่งข้อความ</button>
+        <div id="displayMessage" style="margin-top: 1.5rem; font-size: 1.2rem; color: #a97454;"></div>
+    </div>
+
+    <script>
+        // เล่นเพลงทันทีหลังโหลด
+        window.addEventListener("load", function () {
+            const audio = document.getElementById("bgm");
+            audio.muted = false;
+            audio.play().catch(e => {
+                console.log("เบราว์เซอร์บล็อกการเล่นอัตโนมัติ:", e);
+            });
+        });
+
+        // ส่งข้อความเข้าอีเมล
+        function sendMessage() {
+            const note = document.getElementById("loveNote").value.trim();
+            const display = document.getElementById("displayMessage");
+
+            if (!note) {
+                display.innerHTML = "ยังไม่ได้พิมพ์ข้อความเลยน้า~ 😘";
+                return;
+            }
+
+            display.innerHTML = `💌 ข้อความของคุณ: <br>"${note}"`;
+
+            fetch("https://script.google.com/macros/s/AKfycbxLaki79W5KkIm3YGh-wOrFPrj0xOZ-1MxYl8s9hHuZDSIcnm8JVzvQpeQlOlR9K-0l/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "message=" + encodeURIComponent(note)
+            })
+                .then(res => res.text())
+                .then(data => {
+                    display.innerHTML += `<br><br>📬 ส่งถึง Mudmeow เรียบร้อยแล้ว!`;
+                })
+                .catch(err => {
+                    display.innerHTML += `<br><br>⚠️ เกิดข้อผิดพลาดในการส่ง`;
+                });
+        }
+    </script>
+</body>
+
+</html>
